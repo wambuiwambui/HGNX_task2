@@ -26,7 +26,7 @@ def test():
 def create_person():
     data = request.get_json()
     if 'name' not in data:
-        return jsonify({'error': 'Name is required'}), 400
+        return jsonify({'error': '"name" is required'}), 400
 
     new_person = Person(name=data['name'])
     db.session.add(new_person)
@@ -49,7 +49,7 @@ def update_person(person_id):
         return jsonify({'error': 'Person not found'}), 404
 
     if 'name' not in data:
-        return jsonify({'error': 'Name is required'}), 400
+        return jsonify({'error': '"name" is required'}), 400
 
     person.name = data['name']
     db.session.commit()
