@@ -28,5 +28,4 @@ The API will be available at `http://localhost:8080`.
 tests - postman
 
 
-This version provides essential information in a more concise format. You can add further details as needed.
 
