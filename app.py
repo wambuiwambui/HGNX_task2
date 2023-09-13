@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -8,11 +9,18 @@ db = SQLAlchemy(app)
 
 api = Blueprint('api', __name__)#define routes separately from main app
 
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 #database model(person)
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
 
+
+@app.route('/api', methods=['GET'])
+def test():
+    if request.method == 'GET':
+        return jsonify({"response": " Get request called"})
 
 @api.route('/api', methods=['POST'])
 def create_person():
@@ -22,7 +30,7 @@ def create_person():
 
     new_person = Person(name=data['name'])
     db.session.add(new_person)
-    db.session.commit()
+    db.session.commit() #commit session
 
     return jsonify({'message': 'Person created successfully', 'person_id': new_person.id})
 
@@ -36,7 +44,7 @@ def get_person(person_id):
 @api.route('/api/<int:person_id>', methods=['PUT', 'PATCH'])
 def update_person(person_id):
     data = request.get_json()
-    person = Person.query.get(person_id)
+    person = Person.query.get(person_id) #query database
     if person is None:
         return jsonify({'error': 'Person not found'}), 404
 
@@ -58,10 +66,12 @@ def delete_person(person_id):
     return jsonify({'message': 'Person deleted successfully'})
 
 
+#register api blueprint with flask
 app.register_blueprint(api)
 
 if __name__ == "__main__":
-    db.create_all()
-    app.run(port=5001)
+    with app.app_context(): #application context for database related operations
+        db.create_all()
+        app.run(port=8080)
 
 
