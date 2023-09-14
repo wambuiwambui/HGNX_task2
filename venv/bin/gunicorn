@@ -1,4 +1,4 @@
-#!/home/issa/HGNX_task2/venv/bin/python3
+#!/home/issa/HGNX_task2/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
